@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+text {
+  font: 10px sans-serif;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+var diameter = 960,
+    format = d3.format(",d"),
+    color = d3.scale.category20c();
+
+var bubble = d3.layout.pack()
+    .sort(null)
+    .size([diameter, diameter])
+    .padding(1.5);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .attr("class", "bubble");
+
+d3.tsv("CARS.txt", function(error, root) {
+  var node = svg.selectAll(".node")
+      .data(bubble.nodes(cars(root))
+      .filter(function(d){return !d.children;}))
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  node.append("circle")
+      .attr("r", function(d) { return d.r*0.8; })
+      .style("fill", function(d) { if (d.Country == "U.S.") { 
+        return color(d.Country); 
+      } else {
+        return 'rgb(253, 174, 107)';
+      }
+      });
+
+  node.append("text")
+      .attr("dy", ".3em")
+      .style("text-anchor", "middle")
+      .text(function(d) { return d.Car.substring(0, 5); });
+
+  node.on("mouseover",onmouseover);
+  node.on("mouseout",onmouseout);
+  node.on("click",onmouseclick);
+});
+
+function onmouseclick() {
+  data = this.__data__;
+//  console.log(data);
+  string = "Car: " + data.Car + "\n";
+  string += "Country: " + data.Country + "\n";
+  string += "MPG: " + data.MPG + "\n";
+  string += "Weight: " + data.Weight + "\n";
+  string += "Drive_Ratio: " + data.Drive_Ratio + "\n";
+  string += "Horsepower: " + data.Horsepower + "\n";
+  string += "Displacement: " + data.Displacement + "\n";
+  string += "Cylinders: " + data.Cylinders + "\n";
+
+  alert(string);
+}
+
+function onmouseout() {
+  data = this.__data__;
+
+  d3.select(this)
+    .select('circle')
+    .attr("r",data.r*0.8);
+  d3.select(this)
+    .select("text").text(data.Car.substring(0,5));
+}
+
+function onmouseover() {
+  data = this.__data__;
+
+  d3.select(this)
+    .select('circle')
+    .attr("r",data.r*1.1);
+  d3.select(this)
+    .select("text").text(data.Car);
+}
+
+function cars(root) {
+  var cars = []
+
+  for (var i = 0; i < root.length; i++) {
+    car = root[i];
+    car.value=1
+    cars.push(car);
+  }
+
+  return {children: cars};
+}
+
+d3.select(self.frameElement).style("height", diameter + "px");
+
+</script>

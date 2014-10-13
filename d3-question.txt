@@ -1,0 +1,27 @@
+Create a small visualization using D3.js
+
+The data is from the attached cars.txt file
+(You can pre-format it to json for input into your visualization)
+
+
+The visualization should
+
+- Render circles that represent these cars
+
+- Each circle should have a label with in it, showing up to 5 characters of the car's name
+
+- Circles for cars made in the USA should be colored in blue. 
+
+- When the user hovers over the circle, the circle should get bigger and show the full name within the circle
+
+- When the user clicks on a circle, use the javascript alert to show an alert dialog.
+  All the details of the car should be shown.
+
+  The dialog would look something like this
+
+[ Car: Buick Estate Wagon     ]
+[ Country: U.S                ]
+[ MPGWeight: 16.9             ] 
+   <other attributes>
+[  Cylinders: 8               ]
+
